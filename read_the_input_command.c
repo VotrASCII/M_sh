@@ -1,19 +1,20 @@
 #include<stdio.h>
 #include<stdlib.h>
-//#define BUFFER_SIZE 1024
-//char *line;
+#define BUFFER_SIZE 1024
+//char *line = "\ndkjfskdg\n";
+char *buffer;
 char read_line()
 {
-	//int buf=BUFFER_SIZE;
+	int buf=BUFFER_SIZE;
 	int pos=0;
-	//char *buffer=malloc(sizeof(char)*buf);
+	buffer=malloc(sizeof(char)*buf); //returns NULL if 0 size allocated
 	int c, i;
-	char *line=NULL;
-	ssize_t buf=0;
-	getline(&line, &buf, stdin);
+	//char *line=NULL;
+	//ssize_t buf=0;
+	//getline(&line, &buf, stdin);
 	//printf("%d \n", buf);
-	return *line;
-	/*
+	//return *line;
+	
 	if(!buffer)
 	{
 		printf("M_sh:ALLOCATION ERROR \n");
@@ -25,12 +26,13 @@ char read_line()
 		if(c==-1 || c=='\n')
 		{
 			buffer[pos]='\0';
-			for(i=0; i<sizeof(buffer); i+=1)
+			/*for(i=0; i<sizeof(buffer); i+=1)
 			{
 				printf("%d\n", buffer[i]);
-			}
+			}*/
 			//printf("%d \n", buffer[pos]);
-			return *buffer;
+			//printf("%s\n", buffer);
+			return *buffer; //"return buffer": returns integer from pointer without casting
 		}
 		else
 		{
@@ -47,11 +49,11 @@ char read_line()
 				exit(EXIT_FAILURE);
 			}
 		}			
-	}*/
-	
+	}
+	//return line;
 }
 void main()
 {
 	read_line();
-	//printf("%s", line);
+	//printf("%s\n", buffer);
 }	
