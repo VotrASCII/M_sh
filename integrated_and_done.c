@@ -155,7 +155,7 @@ int help_me(char **args)
 {
 	int i;
 	printf("M_sh: Votrascii's Shell \n");
-	printf("Format: Program_name Arguments (press EnTeR)");
+	printf("Format: Program_name Arguments (press EnTeR) \n");
 	printf("Built-ins I've encorporated in are: \n");
 	for(i = 0; i < num_of_builtins(); i += 1)
 	{
