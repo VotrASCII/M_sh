@@ -1,0 +1,125 @@
+1. basis of shell
+initialize:
+	read
+	execute configuration file
+interpret:
+	stdin input
+	execute
+terminate:
+	shell executes shutdown commands
+	free memory
+	terminate
+
+2. "DONE!!"
+HANDLING COMMANDS
+read:
+	commands from the user input
+parse:
+	separate command strings into:
+		intended command
+		arguments
+execute:
+	run parse commands
+
+
+3. "DONE!!"
+READING input
+dynamic memory allocation
+input character is "int":
+	EOF is an integer value (-1)
+	while(1):
+		c=ord(input()) #ASCII value of input character
+		if c==EOF or c=='\n':
+			end of command
+
+Problems/Doubts: "SOLVED!"
+	->using the function i.e. without "getline()", the #(input) in the buffer = 8. WHY?? Answer: Coding Error
+	->"ssize_t buf"; "print(buf)" returns 120. (Functionality unable to comprehend) 
+	  ssize_t buf: size of block that can be read or written in single file operation
+
+4. "DONE!!"
+PARSING the input/TOKENIZING
+simplifications to consider:
+	no escape sequence
+	just white space to separate the arguments
+	eg: "copy f1 f2" denotes f1 and f2 as separate arguments
+parsing: tokenize with white space as delimiter
+"strtok()": library function to achieve parsing
+	similar to "read":
+		dynamic allocation of buffer to expand in case of commands get oversized
+	different: null terminated array of pointers taken into consideration
+char *strtok(char *str, const char *delim):
+	defined under <string.h>
+	breaks the string using the delimiter "delim"
+	returns a pointer to last found token in the string
+	returns NULL pointer if no string left to retrieve
+
+"gives the array of tokens ready to be executed"
+"returns zero terminated array of char pointers each of which is terminated by a '\0' "
+
+
+5. "DONE!!" 
+EXECUTION
+Step 1: starting the process
+most important: starting the process (main function)
+methods of starting process in UNIX: (just 2)
+	init():
+		start-up process
+	fork():
+		on system level a duplicate of the process is made and starts running
+			makes exact copy and have identical but separate address space
+		returns 0 to the child process and PID of child to parent process
+			PID defined by pid_t defined in <sys/types.h>
+	--> to avoid duplicate process running created by fork(), "exec()" is used
+	--> exec():
+		starts an entirely new process by replacing the current running process
+		never returns unless an error occurs
+summary:
+	fork() forks itself into separate process
+	exec() replaces itself with new program
+	parent process can:
+		continue doing its job
+		wait() for child to finish
+child process:
+	execvp(const char *file, const char *argv[]):
+		defined under <unistd.h>
+		provides array of pointers to null terminated strings that represent argument list available to new program
+		array of pointers must be terminated by NULL pointer
+		if at all it returns -1: signifies error. Hence, "perror(program name)" 
+
+Step 2: taken because all the commands are programs (almost), but this is for the builtins
+	eg.: chdir() - the current directory is property of process, hence use of "cd" changes the directory of child process 		and it terminates leaving the current directory of the parent process unaltered. To make this happen, shell itself 		should execute "chdir()".
+
+	exit: it won't be able to terminate the shell that called it, hence this command needs to be built-in. 
+
+Step 3: putting the builtins together under 1 function		
+
+6. COMMANDS:
+	"copy $1 $2"
+	--> open file in read mode ($1)
+	--> open file in write mode($2)
+	int fd = open(const char* path, int access_mode, mode_t permission)
+	return -1 on error and errorno set accordingly
+	--> read-ing from file $1
+	ssize_t read(int fd, void *buf, size_t size):
+		done till EOF is reached or if sizeof($1)>sizeof(buf)
+			read portion of data and write it in respective file $2
+		else
+			copy the entire thing to $2
+	--> write-ing to file $2
+	ssize_t write(int fd, void *buf, size_t size):
+		written consecutively to another file according to the "buf" size pertaining to above condition
+	--> close both files
+	PROBLEM: "SOLVED!!"
+		redundant data added to new file; Solution: See fstat API, struct fs
+	/* add		
+		struct fstat fs;
+		fstat(int file_descriptor, &fs);
+		BUF=fs.st_size;
+		char buffer[BUF];
+	*/
+	"cat"
+	"touchhh"
+	"ls"
+	"ln"
+	"cd"
