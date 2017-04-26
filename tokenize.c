@@ -33,4 +33,9 @@ char tokenize(char *line)
 	tokens[pos]=NULL;
 	return tokens;
 }
-	
+void main()
+{
+	char line;
+	scanf("%s", &line);
+	tokenize(*line);
+}
